@@ -1,0 +1,56 @@
+﻿@page "/Register"
+
+<EditForm Model="@programmerJunior" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <h1>Register Junior Programmer</h1>
+    <p>
+    <label>
+    Username:
+    <InputText id="name" @bind-Value="programmerJunior.username" />
+    </label>
+    </p>
+    <p>
+    <label>
+    Password:
+    <InputText id="password" @bind-Value="programmerJunior.password" />
+    </label>
+    </p>
+    <p>
+    <label>
+    Repeat Password:
+    <InputText id="password" @bind-Value="programmerJunior.password" />
+    </label>
+    </p>
+    <p>
+    <label>
+    Firsname:
+    <InputText id="firstname" @bind-Value="programmerJunior.firstname" />
+    </label>
+    </p>
+    <p>
+    <label>
+    Lastame:
+    <InputText id="lastname" @bind-Value="programmerJunior.lastname" />
+    </label>
+    </p>
+
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code {
+    private BlazorApp.Data.ProgrammerJunior programmerJunior = new();
+    @inject NavigationManager NavigationManager; 
+
+    private void HandleValidSubmit()
+    {
+        Console.WriteLine("PRINT!2");
+
+        var ticketdatabase = new TicketContext();
+        ticketdatabase.Add(programmerJunior);
+        ticketdatabase.SaveChanges();
+
+        NavigationManager.NavigateTo("/login");
+    }
+}

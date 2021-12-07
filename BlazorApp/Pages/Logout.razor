@@ -1,0 +1,14 @@
+@inject NavigationManager NavigationManager;
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
+@page "/Logout"
+
+<h1> Logout </h1>
+
+@code {
+    protected override async void OnInitialized()
+    {
+        await ProtectedSessionStore.SetAsync("loggedInAs", "");
+        NavigationManager.NavigateTo("/tickets");
+    }
+}

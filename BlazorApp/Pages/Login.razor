@@ -1,0 +1,46 @@
+﻿@inject NavigationManager NavigationManager;
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
+
+@page "/Login"
+
+<EditForm Model="@programmerJunior" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <h1>Login Junior Programmer</h1>
+    <p>
+    <label>
+    Username:
+    <InputText id="name" @bind-Value="programmerJunior.username" />
+    </label>
+    </p>
+    <p>
+    <label>
+    Password:
+    <InputText type="password" id="password" @bind-Value="programmerJunior.password" />
+    </label>
+    </p>
+    <button type="submit">Login</button>
+</EditForm>
+
+@code {
+    private BlazorApp.Data.ProgrammerJunior programmerJunior = new();
+
+    private async void HandleValidSubmit()
+    {
+        var ticketdatabase = new TicketContext();
+        
+        var count = ticketdatabase.ProgrammerJuniors
+        			.Where(pj => pj.username == programmerJunior.username)
+        			.Where(pj => pj.password == programmerJunior.password)
+                    .Count();
+
+        if(count > 0){
+        	await ProtectedSessionStore.SetAsync("loggedInAs", programmerJunior.username);
+
+	        var result = await ProtectedSessionStore.GetAsync<string>("loggedInAs");
+	        string username = result.Success ? result.Value : "";
+        	NavigationManager.NavigateTo("/tickets");
+        }
+    }
+}
